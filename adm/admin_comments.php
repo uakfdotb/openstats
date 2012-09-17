@@ -6,7 +6,7 @@ $errors = "";
       $id = safeEscape( (int) $_GET["del"] );
 	  $pid = safeEscape( (int) $_GET["pid"] );
 	  $delete = $db->query("DELETE FROM comments WHERE id ='".(int)$id."' LIMIT 1 ");
-	  $get = $db->query("SELECT COUNT(*) FROM comments WHERE post_id= '".$pid."' LIMIT 1");
+	  $get = $db->query("SELECT COUNT(*) FROM comments WHERE page_id= '".$pid."' LIMIT 1");
 	  $r = $db->fetch_row($get);
 	  $TotalComments = $r[0];
 	  $update = $db->query("UPDATE news SET comments = '".$TotalComments."' WHERE news_id = '".$pid."' ");
@@ -85,7 +85,7 @@ $errors = "";
   
   if ( isset($_GET["post"]) AND is_numeric($_GET["post"]) ) {
      $pid = safeEscape( (int) $_GET["post"] );
-	 $sql = "AND c.post_id = '".$pid."' ";
+	 $sql = "AND c.page_id = '".$pid."' ";
   } else $sql ="";
 
   $result = $db->query("SELECT COUNT(*) FROM comments as c 
@@ -105,7 +105,7 @@ $errors = "";
    $result = $db->query("SELECT c.*, u.user_name, n.news_title, n.news_id
    FROM comments as c
    LEFT JOIN users as u ON u.user_id = c.user_id
-   LEFT JOIN news as n ON n.news_id = c.post_id
+   LEFT JOIN news as n ON n.news_id = c.page_id
    WHERE c.id>=1 $sql
    ORDER BY c.id 
    DESC LIMIT $offset, $rowsperpage");

@@ -120,8 +120,8 @@ if (is_logged() AND isset($_SESSION["level"] ) AND $_SESSION["level"]>=9 AND iss
    $id = safeEscape( (int) $_GET["delete_comment"] );
    $pid = safeEscape( (int) $_GET["post_id"] );
    
-   $del = $db->query("DELETE FROM comments WHERE id = '".$id."' AND post_id = '".$pid."' LIMIT 1");
-   $get = $db->query("SELECT COUNT(*) FROM comments WHERE post_id= '".$pid."' LIMIT 1");
+   $del = $db->query("DELETE FROM comments WHERE id = '".$id."' AND page_id = '".$pid."' LIMIT 1");
+   $get = $db->query("SELECT COUNT(*) FROM comments WHERE page_id= '".$pid."' LIMIT 1");
    $r = $db->fetch_row($get);
    $TotalComments = $r[0];
    $update = $db->query("UPDATE news SET comments = '".$TotalComments."' WHERE news_id = '".$pid."' ");
@@ -144,13 +144,12 @@ if (is_logged() AND isset($_SESSION["level"] ) AND $_SESSION["level"]>=9 AND iss
   
   
   if ( empty($errors) ) {
-     $result = $db->query("INSERT INTO comments(user_id, page, post_id, text, date, user_ip) 
+     $result = $db->query("INSERT INTO comments(user_id, page, page_id, text, date, user_ip) 
 	 VALUES('".$_SESSION["user_id"]."', 'news', '".(int) $id."', '".$text."', '".time()."', '".$_SERVER["REMOTE_ADDR"]."')");
 	 
-	 $get = $db->query("SELECT COUNT(*) FROM comments WHERE post_id= '".$id."' LIMIT 1");
+	 $get = $db->query("SELECT COUNT(*) FROM comments WHERE page_id= '".$id."' LIMIT 1");
 	 $r = $db->fetch_row($get);
      $TotalComments = $r[0];
-	 $update = $db->query("UPDATE news SET comments = '".$TotalComments."' WHERE news_id = '".$id."' ");
 	 
 	 if ( $result ) {
 	    header("location: ".$website."?post_id=".$id.""); die;
@@ -810,7 +809,7 @@ if (is_logged() AND isset($_SESSION["level"] ) AND $_SESSION["level"]>=9 AND iss
 	 $id = safeEscape( (int) $_GET["post_id"]);
 	 $sql = " AND news_id = '".$id."' ";
 	//GET COMMENTS
-	 $result = $db->query("SELECT COUNT(*) FROM comments WHERE post_id='".$id."'");
+	 $result = $db->query("SELECT COUNT(*) FROM comments WHERE page_id='".$id."'");
 	 $r = $db->fetch_row($result);
 	 $numrows = $r[0];
 	 $result_per_page = $CommentsPerPage;
@@ -824,7 +823,7 @@ if (is_logged() AND isset($_SESSION["level"] ) AND $_SESSION["level"]>=9 AND iss
 	  $result = $db->query("SELECT c.*, u.user_name
 	  FROM  comments as c
 	  LEFT JOIN users as u ON u.user_id = c.user_id
-	  WHERE c.post_id='".$id."' ORDER BY c.$CommentOrder LIMIT $offset, $rowsperpage");
+	  WHERE c.page_id='".$id."' ORDER BY c.$CommentOrder LIMIT $offset, $rowsperpage");
 	  $c=0;
      $CommentsData = array();
 	 
@@ -832,7 +831,7 @@ if (is_logged() AND isset($_SESSION["level"] ) AND $_SESSION["level"]>=9 AND iss
 	$CommentsData[$c]["id"]        = (int)($row["id"]);
 	$CommentsData[$c]["username"]  = ($row["user_name"]);
 	$CommentsData[$c]["user_id"]  = ($row["user_id"]);
-	$CommentsData[$c]["post_id"]  = ($row["post_id"]);
+	$CommentsData[$c]["post_id"]  = ($row["page_id"]);
 	$CommentsData[$c]["text"]  = convEnt($row["text"]);
 	$CommentsData[$c]["date"]  = date($DateFormat, $row["date"]);
 	$CommentsData[$c]["user_ip"]  = ($row["user_ip"]);
@@ -851,7 +850,7 @@ if (is_logged() AND isset($_SESSION["level"] ) AND $_SESSION["level"]>=9 AND iss
 	 include('inc/pagination.php');
 	 $draw_pagination = 1;
 	 
-	 $result = $db->query("SELECT news_id, news_title, news_content, news_data, COUNT(news.id) FROM  news WHERE news_id>=1 AND status=1 $sql ORDER BY news_id DESC 
+	 $result = $db->query("SELECT news_id, news_title, news_content, news_date, COUNT(comments.id) FROM news LEFT JOIN comments ON comments.page_id = news_id WHERE news_id>=1 AND status=1 $sql GROUP BY news_id ORDER BY news_id DESC 
 	 LIMIT $offset, $rowsperpage");
 	 $c=0;
      $NewsData = array();
@@ -862,7 +861,7 @@ if (is_logged() AND isset($_SESSION["level"] ) AND $_SESSION["level"]>=9 AND iss
 	$NewsData[$c]["text"]  = convEnt($row["news_content"]);
 	//$NewsData[$c]["text"]  = str_replace("\n","<br />", $NewsData[$c]["text"]);
 	$NewsData[$c]["date"]  = ($row["news_date"]);
-	$NewsData[$c]["comments"]  = ($row["comments"]);
+	$NewsData[$c]["comments"]  = ($row["COUNT(comments.id)"]);
 	$c++;
 	}	
 	$db->free($result);	

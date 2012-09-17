@@ -150,7 +150,7 @@ if (isset($_GET["reset"])) {
 <body>
 <div id="wrapper">
 <div id="logo">
-  <h1>YOUR LOGO</h1>
+  <h1><?=$HomeTitle?></h1>
 </div>  
 
 <div class="mainmenu">

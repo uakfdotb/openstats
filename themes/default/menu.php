@@ -6,7 +6,7 @@ if ( !isset($s) ) $s="Search players...";
 <body>
 <div id="wrapper">
 <div id="logo">
-  <h1>YOUR LOGO</h1>
+  <h1><?=$HomeTitle?></h1>
   <div style="float: right; margin-top: -20px; margin-right: 48px;">
   <form action="" method="get">
    <input 

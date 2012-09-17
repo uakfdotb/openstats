@@ -1,3 +1,5 @@
+<?php if (strstr($_SERVER['REQUEST_URI'], basename(__FILE__) ) ) { header('HTTP/1.1 404 Not Found'); die; } ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -6,7 +8,7 @@
   <meta name="description" content="DotA OpenStats, php/MySQL webstatistic" />
   <meta name="keywords" content="dota, games, openstats" />
   <link rel="stylesheet" href="css/style.css" />
-  <title>OpenStats 3.0 Installation</title>
+  <title>OpenStats 3.1 Installation</title>
 
  <style>
  .container { margin-top: 32px; }
@@ -20,14 +22,14 @@
  <div class="topbar">
 
         <div class="container">
-          <h1 class="brand" href="<?php echo $website; ?>">OpenStats 3.0</h1>
+          <h1 class="brand" href="<?php echo $website; ?>">OpenStats 3.1</h1>
         </div>
   </div>
   
 <div align="center" style="width: 960px; height: 690px;" >
  <div class="container">
     <div class="content">
-    <h2>Install OpenStats 3.0</h2>
+    <h2>Install OpenStats 3.1</h2>
 	
 	<?php
 	//ч
@@ -146,9 +148,9 @@
 	   }
 	   
 	   $insert = mysql_query("INSERT INTO `news` (`news_id`, `news_title`, `news_content`, `news_date`, `news_updated`, `views`, `status`) 
-	   VALUES (1, 'Hello world!', '<p>Welcome to OpenStats 2.0. This is your first post. Edit or delete it.</p>', '".(int)time()."', 0, 1, 1);") or die( mysql_error() );
+	   VALUES (1, 'Hello world!', '<p>Welcome to OpenStats 3.1. This is your first post. Edit or delete it.</p>', '".(int)time()."', 0, 1, 1);") or die( mysql_error() );
 	   
-	   $insert_comment = mysql_query("INSERT INTO `comments` (`id`, `user_id`, `page`, `post_id`, `text`, `date`, `user_ip`) 
+	   $insert_comment = mysql_query("INSERT INTO `comments` (`id`, `user_id`, `page`, `page_id`, `text`, `date`, `user_ip`) 
 	   VALUES (1, 1, 'news', 1, 'Hi, this is a comment.\r\nTo delete a comment, just log in and view the post&#039;s comments. There you will have the option to edit or delete them.', '".(int)time()."', '".$_SERVER["REMOTE_ADDR"]."');") or die( mysql_error() );
 	   ?>
 	   <div>Tables successfuly created</div>
@@ -211,7 +213,7 @@
 		<div style="display:none;">Please delete or rename <b>install/</b> folder.</div>
 		
 		<div>&nbsp;</div>
-		<input type="button" class="menuButtons" value="Go to OpenStats 3.0" onclick="location.href='<?=$website?>'" />
+		<input type="button" class="menuButtons" value="Go to OpenStats 3.1" onclick="location.href='<?=$website?>'" />
 		<?php
 		write_value_of('$OS_INSTALLED', "$OS_INSTALLED", '1', "config.php");
 		} else echo "ERROR: mysql error!";
@@ -225,7 +227,7 @@
 </div>
   
   <footer>
-        <div id="footer-wrapper">@<?php echo date("Y"); ?> Powered by DotA OpenStats 3.0</div>
+        <div id="footer-wrapper">@<?php echo date("Y"); ?> Powered by DotA OpenStats 3.1</div>
   </footer>
 </body>
 </html>

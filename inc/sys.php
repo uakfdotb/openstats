@@ -31,8 +31,6 @@ if ( isset( $_GET["login"]) AND !is_logged() AND isset($_POST["login_"] ) ) {
    $email = safeEscape( $_POST["login_email"]);
    $password = safeEscape( $_POST["login_pw"]);
    $errors = "";
-   if (!preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i", $email)) 
-   $errors.="<div>".$lang["error_email"]."</div>";
    if ( strlen($password)<=2 ) $errors.="<div>".$lang["error_short_pw"]."</div>";
    
    if ( empty($errors) ) {
@@ -853,7 +851,7 @@ if (is_logged() AND isset($_SESSION["level"] ) AND $_SESSION["level"]>=9 AND iss
 	 include('inc/pagination.php');
 	 $draw_pagination = 1;
 	 
-	 $result = $db->query("SELECT * FROM  news WHERE news_id>=1 AND status=1 $sql ORDER BY news_id DESC 
+	 $result = $db->query("SELECT news_id, news_title, news_content, news_data, COUNT(news.id) FROM  news WHERE news_id>=1 AND status=1 $sql ORDER BY news_id DESC 
 	 LIMIT $offset, $rowsperpage");
 	 $c=0;
      $NewsData = array();
